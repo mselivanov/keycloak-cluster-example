@@ -403,7 +403,7 @@
             <subsystem xmlns="urn:jboss:domain:undertow:4.0">
                 <buffer-cache name="default"/>
                 <server name="default-server">
-                    <http-listener name="default" socket-binding="http" redirect-socket="https" enable-http2="true"/>
+                    <http-listener name="default" socket-binding="http" enable-http2="true"/>
                     <https-listener name="https" socket-binding="https" security-realm="ApplicationRealm" enable-http2="true"/>
                     <host name="default-host" alias="localhost">
                         <location name="/" handler="welcome-content"/>
@@ -548,14 +548,17 @@
                         </security>
                     </datasource>
                     <datasource jndi-name="java:jboss/datasources/KeycloakDS" pool-name="KeycloakDS" enabled="true" use-java-context="true">
-                        <connection-url>jdbc:h2:${jboss.server.data.dir}/../../shared-database/keycloak;AUTO_SERVER=TRUE</connection-url>
-                        <driver>h2</driver>
+                        <connection-url>jdbc:postgresql://keycloak_db/keycloak</connection-url>
+                        <driver>postgresql</driver>
                         <security>
-                            <user-name>sa</user-name>
-                            <password>sa</password>
+                            <user-name>keycloak</user-name>
+                            <password>keycloak</password>
                         </security>
                     </datasource>
                     <drivers>
+                        <driver name="postgresql" module="org.postgresql.jdbc">
+                            <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
+                        </driver>
                         <driver name="h2" module="com.h2database.h2">
                             <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
                         </driver>
@@ -905,7 +908,7 @@
                 <buffer-cache name="default"/>
                 <server name="default-server">
                     <ajp-listener name="ajp" socket-binding="ajp"/>
-                    <http-listener name="default" socket-binding="http" redirect-socket="https" enable-http2="true"/>
+                    <http-listener name="default" socket-binding="http" proxy-address-forwarding="true" enable-http2="true"/>
                     <https-listener name="https" socket-binding="https" security-realm="ApplicationRealm" enable-http2="true"/>
                     <host name="default-host" alias="localhost">
                         <location name="/" handler="welcome-content"/>
@@ -1047,7 +1050,7 @@
             <subsystem xmlns="urn:jboss:domain:undertow:4.0">
                 <buffer-cache name="default"/>
                 <server name="default-server">
-                    <http-listener name="default" socket-binding="http" redirect-socket="https" enable-http2="true"/>
+                    <http-listener name="default" socket-binding="http" enable-http2="true"/>
                     <http-listener name="management" socket-binding="mcmp-management" enable-http2="true"/>
                     <host name="default-host" alias="localhost">
                         <filter-ref name="load-balancer"/>

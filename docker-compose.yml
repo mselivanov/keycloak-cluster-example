@@ -5,9 +5,12 @@ services:
             build: ./nginx
             ports:
                 - "80:80"
+                - "443:443"
         keycloak_db:
             container_name: keycloak_db
             image: postgres:10 
+            ports:
+                - "5432:5432"
             environment:
                 POSTGRES_DB: keycloak
                 POSTGRES_USER: keycloak
@@ -24,6 +27,8 @@ services:
                 DB_DATABASE: keycloak
                 DB_USER: keycloak
                 DB_PASSWORD: keycloak
+                KEYCLOAK_USER: admin
+                KEYCLOAK_PASSWORD: Qazwsx123
                 KEYCLOAK_MGMT_USER: admin
                 KEYCLOAK_MGMT_PASSWORD: Qazwsx123
             depends_on:
