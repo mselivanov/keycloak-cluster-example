@@ -15,22 +15,24 @@ services:
                 POSTGRES_ROOT_PASSWORD: postgres
         keycloak-master:
             container_name: keycloak-master
-            image: jboss/keycloak-ha-postgres:4.1.0.Final
+            build: ./keycloak-master
             ports: 
-                - "8086:8080"
+                - "8086:8230"
             environment:
                 DB_ADDR: keycloak_db
                 DB_PORT: 5432
                 DB_DATABASE: keycloak
                 DB_USER: keycloak
                 DB_PASSWORD: keycloak
+                KEYCLOAK_MGMT_USER: admin
+                KEYCLOAK_MGMT_PASSWORD: Qazwsx123
             depends_on:
                 - keycloak_db
         keycloak-slave01:
             container_name: keycloak-slave01
-            image: jboss/keycloak-ha-postgres:4.1.0.Final
+            build: ./keycloak-slave01
             ports: 
-                - "8087:8080"
+                - "8087:8330"
             environment:
                 DB_ADDR: keycloak_db
                 DB_PORT: 5432
@@ -39,3 +41,4 @@ services:
                 DB_PASSWORD: keycloak
             depends_on:
                 - keycloak_db
+                - keycloak-master

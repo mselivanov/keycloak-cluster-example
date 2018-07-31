@@ -910,7 +910,7 @@
                     <host name="default-host" alias="localhost">
                         <location name="/" handler="welcome-content"/>
                         <http-invoker security-realm="ApplicationRealm"/>
-                        <!--filter-ref name="request-dumper"/-->
+			<filter-ref name="request-dumper"/>
                     </host>
                 </server>
                 <servlet-container name="default">
