@@ -4,46 +4,50 @@ services:
             container_name: proxy 
             build: ./nginx
             ports:
-                - "80:80"
-                - "443:443"
+                - "${PROXY_HTTP_PORT}:80"
         keycloak_db:
             container_name: keycloak_db
             image: postgres:10 
             ports:
-                - "5432:5432"
+                - "${POSTGRES_PORT}:5432"
             environment:
-                POSTGRES_DB: keycloak
-                POSTGRES_USER: keycloak
-                POSTGRES_PASSWORD: keycloak
-                POSTGRES_ROOT_PASSWORD: postgres
+                POSTGRES_DB: ${KEYCLOAK_DB} 
+                POSTGRES_USER: ${KEYCLOAK_DB_USER} 
+                POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+                POSTGRES_ROOT_PASSWORD: ${POSTGRES_ROOT_PASSWORD}
         keycloak-master:
             container_name: keycloak-master
             build: ./keycloak-master
             ports: 
-                - "8086:8230"
+                - "${KC_MASTER_HTTP_PORT}:8230"
+                - "${KC_MASTER_MANAGEMENT_PORT}:9990"
+                - "${JVM_MASTER_DEBUG_PORT}:8787"
             environment:
                 DB_ADDR: keycloak_db
                 DB_PORT: 5432
-                DB_DATABASE: keycloak
-                DB_USER: keycloak
-                DB_PASSWORD: keycloak
-                KEYCLOAK_USER: admin
-                KEYCLOAK_PASSWORD: Qazwsx123
-                KEYCLOAK_MGMT_USER: admin
-                KEYCLOAK_MGMT_PASSWORD: Qazwsx123
+                DB_DATABASE: ${KEYCLOAK_DB}
+                DB_USER: ${KEYCLOAK_DB_USER}
+                DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+                KEYCLOAK_USER: ${KEYCLOAK_USER}
+                KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+                KEYCLOAK_MGMT_USER: ${KEYCLOAK_MGMT_USER}
+                KEYCLOAK_MGMT_PASSWORD: ${KEYCLOAK_MGMT_PASSWORD}
             depends_on:
                 - keycloak_db
         keycloak-slave01:
             container_name: keycloak-slave01
             build: ./keycloak-slave01
             ports: 
-                - "8087:8330"
+                - "${KC_SLAVE01_HTTP_PORT}:8330"
+                - "${JVM_SLAVE01_DEBUG_PORT}:8787"
             environment:
                 DB_ADDR: keycloak_db
                 DB_PORT: 5432
-                DB_DATABASE: keycloak
-                DB_USER: keycloak
-                DB_PASSWORD: keycloak
+                DB_DATABASE: ${KEYCLOAK_DB}
+                DB_USER: ${KEYCLOAK_DB_USER}
+                DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+                KEYCLOAK_MGMT_USER: ${KEYCLOAK_MGMT_USER}
+                KEYCLOAK_MGMT_SECRET: ${KEYCLOAK_MGMT_SECRET}
             depends_on:
                 - keycloak_db
                 - keycloak-master

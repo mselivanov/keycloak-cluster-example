@@ -8,6 +8,8 @@ if [ $KEYCLOAK_USER ] && [ $KEYCLOAK_PASSWORD ]; then
     keycloak/bin/add-user-keycloak.sh --sc /opt/jboss/keycloak/domain/servers/server-one/configuration --user $KEYCLOAK_USER --password $KEYCLOAK_PASSWORD
 fi
 
+keycloak/bin/add-user-keycloak.sh --sc /opt/jboss/keycloak/domain/servers/server-one/configuration --user --password 
+
 ##################
 # Add admin management user #
 ##################
